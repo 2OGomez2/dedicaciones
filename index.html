@@ -14,19 +14,53 @@
             color: #444;
         }
 
+        /* Reproductor Flotante */
+        .reproductor {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid #ff4d6d;
+        }
+
+        #titulo-cancion {
+            font-size: 0.75rem;
+            color: #ff4d6d;
+            font-weight: bold;
+            max-width: 120px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .btn-audio {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
         /* Efecto de corazones de fondo */
         .heart {
             position: fixed;
-            color: #ff4d6d;
-            font-size: 20px;
-            z-index: -1;
+            top: -10vh;
+            font-size: 2rem;
+            pointer-events: none;
+            z-index: 9999;
             user-select: none;
-            animation: move 3s linear forwards;
+            animation: fall linear forwards;
         }
 
-        @keyframes move {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        @keyframes fall {
+           0% { transform: translateY(-10vh) translateX(0) rotate(0deg); opacity: 1; }
+           100% { transform: translateY(110vh) translateX(100px) rotate(360deg); opacity: 0; }
         }
 
         header {
@@ -50,6 +84,7 @@
             flex-direction: column;
             align-items: center;
             padding: 20px;
+            padding-bottom: 100px; /* Espacio para que el reproductor no tape la última foto */
         }
 
         .foto-card {
@@ -63,9 +98,9 @@
             transform: translateY(30px);
             opacity: 0;
             transition: all 0.8s ease-out;
+            cursor: pointer; 
         }
 
-        /* Clase para activar animación al hacer scroll */
         .show {
             opacity: 1 !important;
             transform: translateY(0) !important;
@@ -76,24 +111,22 @@
             height: auto;
             display: block;
             border-radius: 15px;
-            /* MEJORAS DE CALIDAD */
-            image-rendering: -webkit-optimize-contrast; /* Mejora el contraste y nitidez en navegadores modernos */
-            object-fit: cover; /* Asegura que la imagen llene el contenedor sin deformarse */
-            filter: brightness(0.9); /* Ligeramente más oscura por defecto */
+            image-rendering: -webkit-optimize-contrast;
+            object-fit: cover;
+            filter: brightness(0.9);
             transition: filter 0.3s ease;
-        
         }
 
-        .foto-card:hover img {
-            filter: brightness(1); /* Brillo total al interactuar */
-        }
-
-
+        .foto-card:hover img { filter: brightness(1); }
 
         .texto {
             padding: 15px;
             font-size: 1.1rem;
             line-height: 1.5;
+        }
+
+        .foto-card:active {
+            transform: scale(0.98);
         }
     </style>
 </head>
@@ -107,7 +140,7 @@
     <div class="galeria">
         <div class="foto-card">
             <img src="foto1.jpg" alt="Foto 1">
-            <div class="texto">tu primer mensaje lleno de sentimiento.</div>
+            <div class="texto">Prueba de pagina wed personal</div>
         </div>
 
         <div class="foto-card">
@@ -117,33 +150,107 @@
 
         <div class="foto-card">
             <img src="foto3.jpg" alt="Foto 3">
-            <div class="texto"> foto del viaje en moto.</div>
+            <div class="texto">Primera foto.</div>
+        </div>
+
+        <div class="foto-card">
+            <img src="foto4.jpg" alt="Foto 4">
+            <div class="texto">Primera foto.</div>
+        </div>
+
+        <div class="foto-card">
+            <img src="foto5.jpg" alt="Foto 5">
+            <div class="texto">Primera foto.</div>
+        </div>
+
+        <div class="foto-card">
+            <img src="foto6.jpg" alt="Foto 6">
+            <div class="texto">Primera foto.</div>
         </div>
     </div>
 
-    <script>
-        // Función para crear corazones
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerHTML = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
-            document.body.appendChild(heart);
-            setTimeout(() => { heart.remove(); }, 4000);
-        }
-        setInterval(createHeart, 300);
+    <div class="reproductor">
+        <button class="btn-audio" onclick="togglePlay()" id="btn-play">▶️</button>
+        <span id="titulo-cancion">Música desactivada</span>
+        <audio id="mi-audio"></audio>
+    </div>
 
-        // Animación de aparición al bajar
-        const cards = document.querySelectorAll('.foto-card');
-        window.addEventListener('scroll', () => {
-            cards.forEach(card => {
-                const top = card.getBoundingClientRect().top;
-                if (top < window.innerHeight - 100) {
-                    card.classList.add('show');
-                }
-            });
+    <script>
+    const cards = document.querySelectorAll('.foto-card');
+    const audio = document.getElementById('mi-audio');
+    const btnPlay = document.getElementById('btn-play');
+    const tituloCancion = document.getElementById('titulo-cancion');
+
+    // CONFIGURACIÓN DE PLAYLIST ALEATORIA
+    const totalCanciones = 27; // Cambia esto si tienes más o menos
+    let playlist = [];
+    for (let i = 1; i <= totalCanciones; i++) {
+        playlist.push(`Musica-lista/${i}.mp3`); // Tus archivos deben llamarse 1.mp3, 2.mp3...
+    }
+
+    function reproducirSiguienteAleatoria() {
+        const index = Math.floor(Math.random() * playlist.length);
+        audio.src = playlist[index];
+        audio.volume = 0.6; // Volumen al 60% para que sea de fondo
+        
+        // Mostrar qué número de canción suena
+        tituloCancion.innerText = "Sonando: Melodía #" + (index + 1);
+        
+        audio.play().catch(e => console.log("Clic necesario para sonar"));
+        btnPlay.innerText = "⏸️";
+    }
+
+    function togglePlay() {
+        if (audio.paused) {
+            if(!audio.src) reproducirSiguienteAleatoria();
+            else audio.play();
+            btnPlay.innerText = "⏸️";
+        } else {
+            audio.pause();
+            btnPlay.innerText = "▶️";
+        }
+    }
+
+    // Al terminar una canción, salta a otra aleatoria
+    audio.addEventListener('ended', reproducirSiguienteAleatoria);
+
+    // Función para lluvia de corazones
+    function lluviaDeCorazones() {
+        const cantidad = 30;
+        for (let i = 0; i < cantidad; i++) {
+            setTimeout(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('heart');
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                const duracion = Math.random() * 2 + 2;
+                heart.style.animationDuration = duracion + 's';
+                heart.style.fontSize = Math.random() * 1.5 + 1 + 'rem';
+                document.body.appendChild(heart);
+                setTimeout(() => { heart.remove(); }, duracion * 1000);
+            }, i * 50);
+        }
+    }
+
+    // EVENTOS EN LAS FOTOS
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            // Si la música no ha empezado, inicia una canción random
+            if (!audio.src || audio.paused) {
+                reproducirSiguienteAleatoria();
+            }
+            lluviaDeCorazones();
         });
-    </script>
+    });
+
+    window.addEventListener('scroll', () => {
+        cards.forEach(card => {
+            const top = card.getBoundingClientRect().top;
+            if (top < window.innerHeight - 100) {
+                card.classList.add('show');
+            }
+        });
+    });
+    </script>   
 </body>
 </html>
