@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Para Ti</title>
+    <title>Felicidades Meybelin</title>
+    <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
     <style>
         body {
@@ -14,30 +15,57 @@
             color: #444;
         }
 
-        /* Reproductor Flotante */
+        /* Reproductor Flotante Mejorado */
         .reproductor {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 10px 20px;
-            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 20px;
+            border-radius: 25px;
             box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
             z-index: 10001;
             display: flex;
+            flex-direction: column; /* Cambiado a columna para la barra */
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #ff4d6d;
+            width: 180px;
+        }
+
+        .controles-reproductor {
+            display: flex;
             align-items: center;
             gap: 10px;
-            border: 1px solid #ff4d6d;
+            width: 100%;
+        }
+
+        /* BARRA DE PROGRESO */
+        .progreso-container {
+            width: 100%;
+            height: 6px;
+            background: #ffe0e6;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        #barra-progreso {
+            width: 0%; /* Empieza en 0 */
+            height: 100%;
+            background: #ff4d6d;
+            transition: width 0.1s linear;
         }
 
         #titulo-cancion {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #ff4d6d;
             font-weight: bold;
-            max-width: 120px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            width: 100%;
+            text-align: center;
         }
 
         .btn-audio {
@@ -45,9 +73,10 @@
             border: none;
             cursor: pointer;
             font-size: 1.2rem;
+            padding: 0;
         }
 
-        /* Efecto de corazones de fondo */
+        /* Efecto de cangrejos (lluvia) */
         .heart {
             position: fixed;
             top: -10vh;
@@ -65,18 +94,36 @@
 
         header {
             height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    /* NUEVO: Fondo con imagen y capa oscura para contraste */
+    /* El linear-gradient crea la capa negra al 50% de transparencia */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('foto1.jpg');
+    background-size: cover; /* Asegura que la foto cubra todo sin deformarse */
+    background-position: center; /* Centra la parte principal de la foto */
+    background-attachment: fixed; /* EFECTO EXTRA: La foto se queda quieta al hacer scroll (Parallax) */
+    color: white; /* Cambia el color base del texto del header a blanco */
         }
 
+        header p {
+    color: #f0f0f0; /* Un blanco casi puro */
+    font-size: 1.3rem;
+    margin-top: 20px;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
+}
+
         h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 4rem;
-            color: #ff4d6d;
-            margin: 0;
+           
+    font-family: 'Dancing Script', cursive;
+    font-size: 4rem;
+    color: #ffffff; /* Cambiado a BLANCO PURO */
+    margin: 0;
+    /* Sombra negra suave detrás del texto para que se lea perfecto sobre cualquier foto */
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+
         }
 
         .galeria {
@@ -84,7 +131,7 @@
             flex-direction: column;
             align-items: center;
             padding: 20px;
-            padding-bottom: 100px; /* Espacio para que el reproductor no tape la última foto */
+            padding-bottom: 120px;
         }
 
         .foto-card {
@@ -108,10 +155,7 @@
 
         .foto-card img {
             width: 100%;
-            height: auto;
-            display: block;
             border-radius: 15px;
-            image-rendering: -webkit-optimize-contrast;
             object-fit: cover;
             filter: brightness(0.9);
             transition: filter 0.3s ease;
@@ -125,53 +169,129 @@
             line-height: 1.5;
         }
 
-        .foto-card:active {
-            transform: scale(0.98);
+        .final-card {
+           background: white;
+           width: 90%;
+           max-width: 500px;
+           padding: 40px 20px;
+           border-radius: 30px;
+           box-shadow: 0 10px 30px rgba(255, 77, 109, 0.2);
+           margin-top: 50px;
+           text-align: center;
+           border: 2px dashed #ff4d6d;
+           transform: scale(0.8);
+           opacity: 0;
+           transition: all 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
+
+        .final-card.show {
+           opacity: 1;
+           transform: scale(1);
+        }
+
+              .seccion-final {
+    position: relative;
+    width: 100%;
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Corta las fotos que sobresalgan */
+    margin-top: 100px;
+}
+
+.collage-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas de fotos */
+    grid-template-rows: repeat(3, 1fr);
+    gap: 5px;
+    opacity: 0; /* Empieza invisible */
+    transition: opacity 2s ease;
+    z-index: 1;
+}
+
+.collage-grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Para que no se deformen */
+    filter: grayscale(30%) brightness(0.7); /* Estilo vintage/suave */
+    opacity: 0.3; /* IMPORTANTE: Muy claritas para que se lea el texto */
+}
+
+/* El mensaje debe estar por encima del collage */
+.final-card {
+    position: relative;
+    z-index: 10; 
+    background: rgba(255, 255, 255, 0.9); /* Un blanco un poco transparente */
+    backdrop-filter: blur(5px); /* Efecto de vidrio esmerilado */
+}
+
+/* Clase para mostrar el collage al hacer scroll */
+.collage-grid.show-collage {
+    opacity: 1;
+}
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Para alguien especial</h1>
-        <p>Baja un poquito... 👇</p>
+        <h1>Feliz cumpleaños licda</h1>
+        <p> Deslice hasia abajo lic jaja... 🎊</p>
     </header>
 
     <div class="galeria">
-        <div class="foto-card">
-            <img src="foto1.jpg" alt="Foto 1">
-            <div class="texto">Prueba de pagina wed personal</div>
-        </div>
+        <div class="foto-card"><img src="foto1.jpg"><div class="texto">feliz cumpleaños, si el año pasado cumpliste 21 supomgo que este año cumplis 20? jajaja</div></div>
+        <div class="foto-card"><img src="foto2.jpg"><div class="texto">cuarto año y aque vamos a las clases...</div></div>
+        <div class="foto-card"><img src="foto3.jpg"><div class="texto">Momento capturado... -foto por Jhonatan</div></div>
+        <div class="foto-card"><img src="foto4.jpg"><div class="texto">esta foto es la mejor que tengo donde salis vos.</div></div>
+        <div class="foto-card"><img src="foto5.jpg"><div class="texto">Prueba de camara de temu....</div></div>
+        <div class="foto-card"><img src="foto6.jpg"><div class="texto">esta foto es la mejor que vas a tener...</div></div>
+        <div class="foto-card"><img src="foto7.jpg"><div class="texto">internacional.</div></div>
+        <div class="foto-card"><img src="foto8.jpg"><div class="texto">internacional 2.0</div></div>
+        <div class="foto-card"><img src="foto9.jpg"><div class="texto">jajajajjajajajaj 1 de que o que ?.</div></div>
+        <div class="foto-card"><img src="foto10.jpg"><div class="texto">la mejor foto es esta con mi amigo...</div></div>
+        <div class="foto-card"><img src="foto11.jpg"><div class="texto">Copionas las 2 envidian mi estilo.</div></div>
+        <div class="foto-card"><img src="foto12.jpg"><div class="texto">muy tu cumpleños pero si salgo bien...</div></div>
+        <div class="foto-card"><img src="foto13.jpg"><div class="texto">jajajja esta está chiva por que te tapas la cara.</div></div>
+        <div class="foto-card"><img src="foto14.jpg"><div class="texto">quepaso ? no te abrieron la puerta...</div></div>
+        <div class="foto-card"><img src="foto15.jpg"><div class="texto">nomas por que medio risa.</div></div>
+        
+        <div class="seccion-final">
+    <div id="collage-fondo" class="collage-grid">
+        <img src="foto1.jpg">
+        <img src="foto13.jpg">
+        <img src="foto16.jpg">
+        <img src="foto12.jpg">
+        <img src="extra1.jpg">
+        <img src="foto8.jpg">
+        <img src="foto5.jpg">
+        <img src="foto6.jpg">
+        <img src="foto6.jpg">
+        <img src="foto10.jpg">
+        <img src="extra4.jpg">
+        <img src="foto15.jpg">
+    </div>
 
-        <div class="foto-card">
-            <img src="foto2.jpg" alt="Foto 2">
-            <div class="texto">Y aquí otro recuerdo inolvidable.</div>
-        </div>
-
-        <div class="foto-card">
-            <img src="foto3.jpg" alt="Foto 3">
-            <div class="texto">Primera foto.</div>
-        </div>
-
-        <div class="foto-card">
-            <img src="foto4.jpg" alt="Foto 4">
-            <div class="texto">Primera foto.</div>
-        </div>
-
-        <div class="foto-card">
-            <img src="foto5.jpg" alt="Foto 5">
-            <div class="texto">Primera foto.</div>
-        </div>
-
-        <div class="foto-card">
-            <img src="foto6.jpg" alt="Foto 6">
-            <div class="texto">Primera foto.</div>
-        </div>
+    <div id="mensaje-final" class="final-card">
+        <h2>Para terminar...</h2>
+        <p>Gracias por cada momento, por cada risa y por ser parte de mi vida. ❤️</p>
+    </div>
+</div>
     </div>
 
     <div class="reproductor">
-        <button class="btn-audio" onclick="togglePlay()" id="btn-play">▶️</button>
-        <span id="titulo-cancion">Música desactivada</span>
+        <div id="titulo-cancion">Toca una foto</div>
+        <div class="controles-reproductor">
+            <button class="btn-audio" onclick="togglePlay()" id="btn-play">▶️</button>
+            <div class="progreso-container">
+                <div id="barra-progreso"></div>
+            </div>
+        </div>
         <audio id="mi-audio"></audio>
     </div>
 
@@ -180,29 +300,45 @@
     const audio = document.getElementById('mi-audio');
     const btnPlay = document.getElementById('btn-play');
     const tituloCancion = document.getElementById('titulo-cancion');
+    const barraProgreso = document.getElementById('barra-progreso');
 
-    // CONFIGURACIÓN DE PLAYLIST ALEATORIA
-    const totalCanciones = 27; // Cambia esto si tienes más o menos
+    const totalCanciones = 27; 
+    let primeraReproduccion = true; // Variable de control
     let playlist = [];
     for (let i = 1; i <= totalCanciones; i++) {
-        playlist.push(`Musica-lista/${i}.mp3`); // Tus archivos deben llamarse 1.mp3, 2.mp3...
+        playlist.push(`Musica-lista/${i}.mp3`);
     }
 
-    function reproducirSiguienteAleatoria() {
-        const index = Math.floor(Math.random() * playlist.length);
+    function reproducirSiguiente() {
+        let index;
+
+        if (primeraReproduccion) {
+            index = 0; // Fuerza la canción 1.mp3 (índice 0)
+            primeraReproduccion = false;
+        } else {
+            // Elige una al azar que NO sea la 1 (opcional) o cualquiera al azar
+            index = Math.floor(Math.random() * playlist.length);
+        }
+
         audio.src = playlist[index];
-        audio.volume = 0.6; // Volumen al 60% para que sea de fondo
+        audio.volume = 0.6;
+        tituloCancion.innerText = "Reproduciendo #" + (index + 1);
         
-        // Mostrar qué número de canción suena
-        tituloCancion.innerText = "Sonando: Melodía #" + (index + 1);
-        
-        audio.play().catch(e => console.log("Clic necesario para sonar"));
+        audio.play().catch(e => console.log("Error al reproducir"));
         btnPlay.innerText = "⏸️";
     }
 
+    // Actualizar barra de progreso
+    audio.addEventListener('timeupdate', () => {
+        if (audio.duration) {
+            const porcentaje = (audio.currentTime / audio.duration) * 100;
+            barraProgreso.style.width = porcentaje + "%";
+        }
+    });
+
     function togglePlay() {
         if (audio.paused) {
-            if(!audio.src) reproducirSiguienteAleatoria();
+            if(!audio.src) reproducirSiguiente();
             else audio.play();
             btnPlay.innerText = "⏸️";
         } else {
@@ -211,46 +347,97 @@
         }
     }
 
-    // Al terminar una canción, salta a otra aleatoria
-    audio.addEventListener('ended', reproducirSiguienteAleatoria);
+    audio.addEventListener('ended', reproducirSiguiente);
 
-    // Función para lluvia de corazones
-    function lluviaDeCorazones() {
-        const cantidad = 30;
-        for (let i = 0; i < cantidad; i++) {
-            setTimeout(() => {
-                const heart = document.createElement('div');
-                heart.classList.add('heart');
-                heart.innerHTML = '❤️';
-                heart.style.left = Math.random() * 100 + 'vw';
-                const duracion = Math.random() * 2 + 2;
-                heart.style.animationDuration = duracion + 's';
-                heart.style.fontSize = Math.random() * 1.5 + 1 + 'rem';
-                document.body.appendChild(heart);
-                setTimeout(() => { heart.remove(); }, duracion * 1000);
-            }, i * 50);
-        }
+   // 1. Función base para crear un solo emoji (Cangrejo o Corazón)
+function crearEmoji(esFuerte = false) {
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.innerHTML = '♡'; // Puedes cambiarlo por ❤️ si prefieres
+    
+    // Posición horizontal aleatoria
+    heart.style.left = Math.random() * 100 + 'vw';
+    
+    // Si es fuerte (clic), caen más rápido y son más grandes
+    // Si es leve (llovizna), son más lentos y pequeños
+    const duracion = esFuerte 
+        ? (Math.random() * 1.5 + 1)  // Entre 1 y 2.5s (Rápido)
+        : (Math.random() * 3 + 4);    // Entre 4 y 7s (Lento y suave)
+    
+    heart.style.animationDuration = duracion + 's';
+    
+    const tamaño = esFuerte
+        ? (Math.random() * 1.5 + 1.5 + 'rem') // Más grandes al hacer clic
+        : (Math.random() * 0.8 + 0.7 + 'rem'); // Más pequeños en llovizna
+        
+    heart.style.fontSize = tamaño;
+    
+    // Si es llovizna leve, que sea un poco más transparente para no distraer tanto
+    if (!esFuerte) {
+        heart.style.opacity = "0.6";
     }
+
+    document.body.appendChild(heart);
+
+    // Limpieza
+    setTimeout(() => {
+        heart.remove();
+    }, duracion * 1000);
+}
+
+// 2. Función para la llovizna constante (Leve)
+function iniciarLloviznaLeve() {
+    // Crea un emoji cada 800 milisegundos (ajusta este tiempo para más o menos lluvia)
+    setInterval(() => {
+        crearEmoji(false);
+    }, 800);
+}
+
+// 3. Función para la lluvia fuerte (Clic)
+function lluviaFuerte() {
+    const cantidad = 40; // Muchos más emojis
+    for (let i = 0; i < cantidad; i++) {
+        setTimeout(() => {
+            crearEmoji(true);
+        }, i * 30); // Ráfaga rápida
+    }
+}
 
     // EVENTOS EN LAS FOTOS
     cards.forEach(card => {
         card.addEventListener('click', () => {
-            // Si la música no ha empezado, inicia una canción random
-            if (!audio.src || audio.paused) {
-                reproducirSiguienteAleatoria();
-            }
-            lluviaDeCorazones();
+            // Cada clic cambia la canción (empezando por la 1 la primera vez)
+            reproducirSiguiente();
+            lluviaFuerte();
         });
     });
 
-    window.addEventListener('scroll', () => {
-        cards.forEach(card => {
-            const top = card.getBoundingClientRect().top;
-            if (top < window.innerHeight - 100) {
-                card.classList.add('show');
-            }
-        });
+   window.addEventListener('scroll', () => {
+    // 1. Animación para las tarjetas de fotos individuales
+    cards.forEach(card => {
+        const top = card.getBoundingClientRect().top;
+        if (top < window.innerHeight - 100) {
+            card.classList.add('show');
+        }
     });
+
+    // 2. Animación sincronizada para el mensaje final y el collage de fondo
+    const mensajeFinal = document.getElementById('mensaje-final');
+    const collage = document.getElementById('collage-fondo');
+
+    // Verificamos si el mensaje final ya es visible en el scroll
+    if (mensajeFinal && mensajeFinal.getBoundingClientRect().top < window.innerHeight - 50) {
+        mensajeFinal.classList.add('show');
+        
+        // Si existe el collage, le añadimos la clase para que aparezca suavemente
+        if (collage) {
+            collage.classList.add('show-collage');
+        }
+    }
+});
+
+    // Iniciar el efecto apenas cargue la página
+     iniciarLloviznaLeve();
     </script>   
 </body>
 </html>
