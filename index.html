@@ -136,16 +136,17 @@
 
         .foto-card {
             background: white;
-            width: 90%;
+            width: 95%; /* Aumentamos un poco para que no quede tanto margen a los lados */
             max-width: 400px;
-            padding: 15px;
+            padding: 12px; /* Reducimos un poco el padding */
             border-radius: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             transform: translateY(30px);
             opacity: 0;
             transition: all 0.8s ease-out;
-            cursor: pointer; 
+            cursor: pointer;
+            box-sizing: border-box; /* Esto asegura que el padding no "infle" la tarjeta */
         }
 
         .show {
@@ -164,9 +165,14 @@
         .foto-card:hover img { filter: brightness(1); }
 
         .texto {
-            padding: 15px;
-            font-size: 1.1rem;
-            line-height: 1.5;
+            
+
+            padding: 12px 5px;
+            font-size: 1rem; /* Un poco más pequeño para que quepa más texto */
+            line-height: 1.4;
+            word-wrap: break-word; /* Rompe palabras largas */
+            overflow-wrap: break-word;
+            text-align: center; /* Se ve más ordenado en móviles */
         }
 
         .final-card {
@@ -235,30 +241,44 @@
 .collage-grid.show-collage {
     opacity: 1;
 }
+
+                   /* Ajustes específicos para teléfonos muy pequeños */
+@media (max-width: 380px) {
+    h1 {
+        font-size: 2.8rem; /* Título más pequeño para que no se corte */
+    }
+    .texto {
+        font-size: 0.9rem; /* Letra de las fotos un poco más pequeña */
+        padding: 10px 2px;
+    }
+    .foto-card {
+        padding: 8px;
+    }
+}
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Feliz cumpleaños licda</h1>
+        <h1>Feliz Cumpleaños Lic</h1>
         <p> Deslice hasia abajo lic jaja... 🎊</p>
     </header>
 
     <div class="galeria">
         <div class="foto-card"><img src="foto1.jpg"><div class="texto">feliz cumpleaños, si el año pasado cumpliste 21 supomgo que este año cumplis 20? jajaja</div></div>
-        <div class="foto-card"><img src="foto2.jpg"><div class="texto">cuarto año y aque vamos a las clases...</div></div>
-        <div class="foto-card"><img src="foto3.jpg"><div class="texto">Momento capturado... -foto por Jhonatan</div></div>
+        <div class="foto-card"><img src="foto2.jpg"><div class="texto">cuarto año y aque vamos a las clases, aprender a decir "ando por el jusgado" cada vez que te van a buscar a la oficina y no estas jajajaja</div></div>
+        <div class="foto-card"><img src="foto3.jpg"><div class="texto">Momento capturado justo cuando este ejemplar intenta encender fuego y lastimosamente fallo en el intento ya que cuando les enseñaron eso en las clases dicho ejemplar falto ese dia. -foto capturada por Jhonatan</div></div>
         <div class="foto-card"><img src="foto4.jpg"><div class="texto">esta foto es la mejor que tengo donde salis vos.</div></div>
-        <div class="foto-card"><img src="foto5.jpg"><div class="texto">Prueba de camara de temu....</div></div>
-        <div class="foto-card"><img src="foto6.jpg"><div class="texto">esta foto es la mejor que vas a tener...</div></div>
+        <div class="foto-card"><img src="foto5.jpg"><div class="texto">Prueba de camara de temu..</div></div>
+        <div class="foto-card"><img src="foto6.jpg"><div class="texto">esta foto es la mejor que vas a tener, es más esa usa en la graduación. Recomendada 100%</div></div>
         <div class="foto-card"><img src="foto7.jpg"><div class="texto">internacional.</div></div>
         <div class="foto-card"><img src="foto8.jpg"><div class="texto">internacional 2.0</div></div>
         <div class="foto-card"><img src="foto9.jpg"><div class="texto">jajajajjajajajaj 1 de que o que ?.</div></div>
-        <div class="foto-card"><img src="foto10.jpg"><div class="texto">la mejor foto es esta con mi amigo...</div></div>
+        <div class="foto-card"><img src="foto10.jpg"><div class="texto">la mejor foto es esta con mi amigo, ustedes se metieron en medio.</div></div>
         <div class="foto-card"><img src="foto11.jpg"><div class="texto">Copionas las 2 envidian mi estilo.</div></div>
-        <div class="foto-card"><img src="foto12.jpg"><div class="texto">muy tu cumpleños pero si salgo bien...</div></div>
-        <div class="foto-card"><img src="foto13.jpg"><div class="texto">jajajja esta está chiva por que te tapas la cara.</div></div>
-        <div class="foto-card"><img src="foto14.jpg"><div class="texto">quepaso ? no te abrieron la puerta...</div></div>
+        <div class="foto-card"><img src="foto12.jpg"><div class="texto">muy tu cumpleños pero si salgo bien. juela</div></div>
+        <div class="foto-card"><img src="foto13.jpg"><div class="texto"> 2da mejor foto.</div></div>
+        <div class="foto-card"><img src="foto14.jpg"><div class="texto">quepaso ? no te abrieron la puerta y te querias meter por la ventana? jaja.</div></div>
         <div class="foto-card"><img src="foto15.jpg"><div class="texto">nomas por que medio risa.</div></div>
         
         <div class="seccion-final">
@@ -278,8 +298,11 @@
     </div>
 
     <div id="mensaje-final" class="final-card">
-        <h2>Para terminar...</h2>
-        <p>Gracias por cada momento, por cada risa y por ser parte de mi vida. ❤️</p>
+        <h2>Felicidades♡✨</h2>
+        <p>Que tengas un bonito cumpleaños, Bendiciones en tus 22 y ultimo año 
+            de carrera que tengas solamente exitos y todo te salga bien para que ya pronto les 
+            des mentiras a tus clientes jajajaj bromas. Pero espero que todo te salga bien en este año,
+            tanto en lo academico como en tu vida, Bendiciones siempre.♡   </p>
     </div>
 </div>
     </div>
@@ -353,7 +376,15 @@
 function crearEmoji(esFuerte = false) {
     const heart = document.createElement('div');
     heart.classList.add('heart');
-    heart.innerHTML = '♡'; // Puedes cambiarlo por ❤️ si prefieres
+   
+    // 1. Definimos una lista con todos los emojis que quieras
+const listaEmojis = ['❤️', '💖','♡', '✨', '🎂', '🎉', '♡', '🌸', '🎈', '🪅','♡'];
+
+// 2. Elegimos uno al azar de la lista
+const emojiAleatorio = listaEmojis[Math.floor(Math.random() * listaEmojis.length)];
+
+// 3. Lo asignamos al elemento
+heart.innerHTML = emojiAleatorio;
     
     // Posición horizontal aleatoria
     heart.style.left = Math.random() * 100 + 'vw';
