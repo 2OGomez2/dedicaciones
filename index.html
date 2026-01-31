@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Felicidades Meybelin✨</title>
+    <title>Feliz cumpleaños Meybelin</title>
     <link rel="icon" type="image/png" href="logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
     <style>
-        /* --- FONDO ANIMADO --- */
+      
         body {
             font-family: 'Quicksand', sans-serif;
             margin: 0;
             padding: 0;
             overflow-x: hidden;
             color: #444;
-            /* Gradiente que se mueve */
             background: linear-gradient(-45deg, #fff0f3, #ffdee5, #fff0f3, #ffe3e8);
             background-size: 400% 400%;
             animation: gradientBG 15s ease infinite;
@@ -26,12 +25,12 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* --- BRILLOS MEJORADOS --- */
+       
         .sparkle {
             position: fixed;
             border-radius: 50%;
             pointer-events: none;
-            z-index: 1; /* Por encima del fondo, debajo de las fotos */
+            z-index: 1;
             animation: float-sparkle linear infinite;
         }
 
@@ -41,7 +40,7 @@
             100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
         }
 
-        /* --- HEADER --- */
+        
         header {
             height: 100vh;
             display: flex;
@@ -71,7 +70,7 @@
             text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
         }
 
-        /* --- GALERÍA POLAROID --- */
+       
         .galeria {
             display: flex;
             flex-direction: column;
@@ -114,7 +113,7 @@
             text-align: center;
         }
 
-        /* --- SECCIÓN FINAL --- */
+       
         .seccion-final {
             position: relative;
             width: 100%;
@@ -156,7 +155,6 @@
 
         .final-card.show { opacity: 1; transform: scale(1); }
 
-        /* --- REPRODUCTOR --- */
         .reproductor {
             position: fixed;
             bottom: 20px; right: 20px;
@@ -178,7 +176,7 @@
         #titulo-cancion { font-size: 0.7rem; color: #ff4d6d; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; text-align: center; }
         .btn-audio { background: none; border: none; cursor: pointer; font-size: 1.2rem; }
 
-        /* --- BOTÓN SUBIR --- */
+       
         .btn-subir {
             position: fixed; bottom: 20px; left: 20px;
             background: white; color: #ff4d6d; border: 2px solid #ff4d6d;
@@ -187,7 +185,7 @@
             cursor: pointer; z-index: 10000; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* --- LLUVIA EMOJIS --- */
+     
         .heart { position: fixed; top: -10vh; pointer-events: none; z-index: 9999; animation: fall linear forwards; }
         @keyframes fall {
             0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
@@ -291,18 +289,45 @@
         });
     });
 
-    // MÚSICA
-    const totalCanciones = 8; 
-    let primeraReproduccion = true;
+   
+    const totalCanciones = 9; 
     let playlist = [];
     for (let i = 1; i <= totalCanciones; i++) { playlist.push(`Musica-lista/${i}.mp3`); }
 
+    let colaReproduccion = [];
+    let esLaPrimeraVez = true;
+
+  
+    function barajar(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
     function reproducirSiguiente() {
-        let index = primeraReproduccion ? 0 : Math.floor(Math.random() * playlist.length);
-        primeraReproduccion = false;
-        audio.src = playlist[index];
+        let indexToPlay;
+
+        if (esLaPrimeraVez) {
+         
+            indexToPlay = 0; 
+            esLaPrimeraVez = false;
+           
+            colaReproduccion = [1, 2, 3, 4, 5, 6, 7, 8];
+            barajar(colaReproduccion);
+        } else {
+            
+            if (colaReproduccion.length === 0) {
+                colaReproduccion = Array.from({length: totalCanciones}, (_, i) => i);
+                barajar(colaReproduccion);
+            }
+         
+            indexToPlay = colaReproduccion.pop();
+        }
+
+        audio.src = playlist[indexToPlay];
         audio.volume = 0.6;
-        tituloCancion.innerText = "Reproduciendo #" + (index + 1);
+        tituloCancion.innerText = "Reproduciendo #" + (indexToPlay + 1);
         audio.play().catch(e => console.log("Error de audio"));
         btnPlay.innerText = "⏸️";
     }
@@ -321,8 +346,7 @@
         }
     }
     audio.addEventListener('ended', reproducirSiguiente);
-
-    // EMOJIS Y BRILLOS MEJORADOS
+   
     function crearEmoji(esFuerte = false) {
         const heart = document.createElement('div');
         heart.classList.add('heart');
@@ -332,7 +356,6 @@
         const duracion = esFuerte ? (Math.random() * 1.5 + 1) : (Math.random() * 3 + 4);
         heart.style.animationDuration = duracion + 's';
         heart.style.fontSize = esFuerte ? (Math.random() * 2 + 1.5 + 'rem') : (Math.random() * 1 + 0.8 + 'rem');
-        if (!esFuerte) heart.style.opacity = "0.7";
         document.body.appendChild(heart);
         setTimeout(() => heart.remove(), duracion * 1000);
     }
@@ -344,30 +367,22 @@
     function crearBrillo() {
         const sparkle = document.createElement('div');
         sparkle.classList.add('sparkle');
-        
-        // Tamaños variados
         const size = Math.random() * 6 + 3 + 'px';
         sparkle.style.width = size;
         sparkle.style.height = size;
-        
-        // Colores variados (Blanco y Dorado)
         const colores = ['#ffffff', '#fff0f3', '#ffd700'];
         sparkle.style.background = colores[Math.floor(Math.random() * colores.length)];
         sparkle.style.boxShadow = `0 0 10px ${sparkle.style.background}`;
-        
         sparkle.style.left = Math.random() * 100 + 'vw';
         const duration = Math.random() * 4 + 3 + 's';
         sparkle.style.animationDuration = duration;
-        
         document.body.appendChild(sparkle);
         setTimeout(() => sparkle.remove(), parseFloat(duration) * 1000);
     }
 
     cards.forEach(card => card.addEventListener('click', () => { reproducirSiguiente(); lluviaFuerte(); }));
-    
-    // Intervalos para que siempre pase algo en el fondo
-    setInterval(() => crearEmoji(false), 1000); // Emojis lentos
-    setInterval(crearBrillo, 200); // Brillos constantes (más frecuentes)
+    setInterval(() => crearEmoji(false), 1000);
+    setInterval(crearBrillo, 200);
     </script>   
 </body>
 </html>
