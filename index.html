@@ -42,20 +42,27 @@
 
         
         header {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('foto1.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            color: white;
-            position: relative;
-            z-index: 2;
-        }
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('foto1.jpg');
+    background-size: cover;
+    background-position: center;
+    /* QUITAMOS background-attachment: fixed de aquí */
+    color: white;
+    position: relative;
+    z-index: 2;
+}
+
+/* Agregamos esto para que solo funcione el efecto fijo en computadoras */
+@media (min-width: 1024px) {
+    header {
+        background-attachment: fixed;
+    }
+}
 
         header h1 {
             font-family: 'Dancing Script', cursive;
